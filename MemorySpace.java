@@ -58,24 +58,29 @@ public class MemorySpace {
 	 * @return the base address of the allocated block, or -1 if unable to allocate
 	 */
 	public int malloc(int length) {		
+		try {
 		int i = 0;
-		while (length > freeList.getBlock(i).length && i < freeList.getSize()) {
-			
-			i++;
+			while (length > freeList.getBlock(i).length && i < freeList.getSize()) {
+
+				i++;
+			}
+			if (i == freeList.getSize()) {
+				return -1;
+			}
+			else if (length == freeList.getBlock(i).length) {
+				allocatedList.addLast(freeList.getBlock(i));
+				freeList.remove(freeList.getBlock(i));
+			}
+			else {
+				allocatedList.addLast(new MemoryBlock(freeList.getBlock(i).baseAddress, length));
+				freeList.add(i, new MemoryBlock(freeList.getBlock(i).baseAddress + length, freeList.getBlock(i).length - length));
+				freeList.remove(i + 1);
+			}
+			return allocatedList.getLast().block.baseAddress;
 		}
-		if (i == freeList.getSize()) {
+		catch (IllegalArgumentException e) {
 			return -1;
 		}
-		else if (length == freeList.getBlock(i).length) {
-			allocatedList.addLast(freeList.getBlock(i));
-			freeList.remove(freeList.getBlock(i));
-		}
-		else {
-			allocatedList.addLast(new MemoryBlock(freeList.getBlock(i).baseAddress, length));
-			freeList.add(i, new MemoryBlock(freeList.getBlock(i).baseAddress + length, freeList.getBlock(i).length - length));
-			freeList.remove(i + 1);
-		}
-		return allocatedList.getLast().block.baseAddress;
 	}
 
 	/**
@@ -87,16 +92,21 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		int i = 0;
-		while (address != allocatedList.getBlock(i).baseAddress && i < allocatedList.getSize()) {
-			i++;
+		try {
+			int i = 0;
+			while (address != allocatedList.getBlock(i).baseAddress && i < allocatedList.getSize()) {
+				i++;
+			}
+			if (i == allocatedList.getSize()) {
+				return;
+			}
+			else {
+				freeList.addLast(allocatedList.getBlock(i));
+				allocatedList.remove(i);
+			}
 		}
-		if (i == allocatedList.getSize()) {
+		catch (IllegalArgumentException e) {
 			return;
-		}
-		else {
-			freeList.addLast(allocatedList.getBlock(i));
-			allocatedList.remove(i);
 		}
 	}
 	
