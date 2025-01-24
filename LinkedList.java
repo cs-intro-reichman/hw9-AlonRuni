@@ -147,7 +147,7 @@ public class LinkedList {
 	 */
 	public MemoryBlock getBlock(int index) {
 		if (index < 0 || index >= this.size) {
-			throw new IllegalArgumentException ("illegal index " + index);
+			throw new IllegalArgumentException ("index must be between 0 and size");
 		}
 
 		return getNode(index).block;
@@ -192,9 +192,14 @@ public class LinkedList {
 	 */
 	public void remove(int index) {
 		if (index < 0 || index >= this.size) {
-			throw new IllegalArgumentException ("illegal index " + index);
+			throw new IllegalArgumentException ("index must be between 0 and size");
 		}
-		if (index == 0) {
+		if (this.size == 1) {
+			this.first = null;
+			this.last = this.first;
+			this.size--;
+		}
+		else if (index == 0) {
 			Node cur = this.first;
 			this.first = this.first.next;
 			cur.next = null;
