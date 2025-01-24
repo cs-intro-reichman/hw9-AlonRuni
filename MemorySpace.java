@@ -87,7 +87,17 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		//// Write your code here
+		int i = 0;
+		while (address != allocatedList.getBlock(i).baseAddress && i < allocatedList.getSize()) {
+			i++;
+		}
+		if (i == allocatedList.getSize()) {
+			return;
+		}
+		else {
+			freeList.addLast(allocatedList.getBlock(i));
+			allocatedList.remove(i);
+		}
 	}
 	
 	/**
