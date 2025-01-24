@@ -258,7 +258,7 @@ public class LinkedList {
 	 */
 	public String toString() {
 		if (this.size == 0) {
-			return "()";
+			return "";
 		}
 		Node cur = this.first;
 		String str = "";

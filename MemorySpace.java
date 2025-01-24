@@ -59,9 +59,8 @@ public class MemorySpace {
 	 */
 	public int malloc(int length) {		
 		try {
-		int i = 0;
+			int i = 0;
 			while (length > freeList.getBlock(i).length && i < freeList.getSize()) {
-
 				i++;
 			}
 			if (i == freeList.getSize()) {
