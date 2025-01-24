@@ -66,6 +66,10 @@ public class MemorySpace {
 		if (i == freeList.getSize()) {
 			return -1;
 		}
+		else if (length == freeList.getBlock(i).length) {
+			allocatedList.addLast(freeList.getBlock(i));
+			freeList.remove(freeList.getBlock(i));
+		}
 		else {
 			allocatedList.addLast(new MemoryBlock(freeList.getBlock(i).baseAddress, length));
 			freeList.add(i, new MemoryBlock(freeList.getBlock(i).baseAddress + length, freeList.getBlock(i).length - length));
