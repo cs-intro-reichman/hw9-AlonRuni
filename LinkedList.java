@@ -1,3 +1,4 @@
+
 /**
  * Represents a list of Nodes. 
  */
@@ -50,12 +51,15 @@ public class LinkedList {
 	 * @return the node at the given index
 	 */		
 	public Node getNode(int index) {
-		if (index < 0 || index > size) {
+		if (index < 0 || index >= size) {
 			throw new IllegalArgumentException(
 					"index must be between 0 and size");
 		}
-		//// Replace the following statement with your code
-		return null;
+		Node cur = this.first;
+		for (int i = 0; i < index; i++) {
+			cur = cur.next;
+		}
+		return cur;
 	}
 	
 	/**
@@ -78,7 +82,27 @@ public class LinkedList {
 	 *         if index is negative or greater than the list's size
 	 */
 	public void add(int index, MemoryBlock block) {
-		//// Write your code here
+		if (index < 0 || index > this.size) {
+			throw new IllegalArgumentException ("illegal index " + index);
+		}
+		if (index == 0) {
+			addFirst(block);
+			return;
+		}
+		else if (this.size == index) {
+			addLast(block);
+			return;
+		}
+		else {
+			Node current = this.first;
+			for (int i = 0; i < index - 1; i++) {
+					current = current.next;
+				}
+			Node newNode = new Node(block);
+			newNode.next = current.next;
+			current.next = newNode;
+			this.size++;
+		}
 	}
 
 	/**
@@ -89,7 +113,10 @@ public class LinkedList {
 	 *        the given memory block
 	 */
 	public void addLast(MemoryBlock block) {
-		//// Write your code here
+		Node newNode = new Node(block);
+		this.last.next = newNode;
+		this.last = newNode;
+		this.size++;
 	}
 	
 	/**
@@ -100,7 +127,13 @@ public class LinkedList {
 	 *        the given memory block
 	 */
 	public void addFirst(MemoryBlock block) {
-		//// Write your code here
+		Node newNode = new Node(block);
+			newNode.next = this.first;
+			this.first = newNode;
+			this.size++;
+			if (this.size == 1) {
+				this.last = this.first;
+			}
 	}
 
 	/**
@@ -113,8 +146,11 @@ public class LinkedList {
 	 *         if index is negative or greater than or equal to size
 	 */
 	public MemoryBlock getBlock(int index) {
-		//// Replace the following statement with your code
-		return null;
+		if (index < 0 || index >= this.size) {
+			throw new IllegalArgumentException ("illegal index " + index);
+		}
+
+		return getNode(index).block;
 	}	
 
 	/**
@@ -125,7 +161,15 @@ public class LinkedList {
 	 * @return the index of the block, or -1 if the block is not in this list
 	 */
 	public int indexOf(MemoryBlock block) {
-		//// Replace the following statement with your code
+		Node cur = this.first;
+		int count = 0;
+		while (cur != null) {
+			if (cur.block.equals(block)) {
+				return count;
+			}
+			cur = cur.next;
+			count++;
+		}
 		return -1;
 	}
 
@@ -136,7 +180,7 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-		//// Write your code here
+		remove(indexOf(node.block));
 	}
 
 	/**
@@ -147,7 +191,35 @@ public class LinkedList {
 	 *         if index is negative or greater than or equal to size
 	 */
 	public void remove(int index) {
-		//// Write your code here
+		if (index < 0 || index >= this.size) {
+			throw new IllegalArgumentException ("illegal index " + index);
+		}
+		if (index == 0) {
+			Node cur = this.first;
+			this.first = this.first.next;
+			cur.next = null;
+			this.size--;
+		}
+		else if (index == this.size - 1) {
+			Node cur = this.first;
+			while (cur.next.next != null) {
+				cur = cur.next;
+			}
+			this.last = cur;
+			cur.next = null;
+			this.size--;
+		}
+		else {
+			Node cur = this.first;
+			for (int i = 0; i < index - 1; i++) {
+				cur = cur.next;
+			}
+			Node after = cur.next;
+			cur.next = cur.next.next;
+			after.next = null;
+			this.size--;
+		}
+
 	}
 
 	/**
@@ -158,7 +230,10 @@ public class LinkedList {
 	 *         if the given memory block is not in this list
 	 */
 	public void remove(MemoryBlock block) {
-		//// Write your code here
+		if (indexOf(block) < 0) {
+			throw new IllegalArgumentException ("block not exist in list. ");
+		}
+		remove(indexOf(block));
 	}	
 
 	/**
@@ -172,7 +247,15 @@ public class LinkedList {
 	 * A textual representation of this list, for debugging.
 	 */
 	public String toString() {
-		//// Replace the following statement with your code
-		return "";
+		if (this.size == 0) {
+			return "()";
+		}
+		Node cur = this.first;
+		String str = "";
+		while (cur != null) {
+			str += cur.block + ", ";
+			cur = cur.next;
+		}
+		return str.substring(0, str.length() - 2);
 	}
 }
