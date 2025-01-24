@@ -113,10 +113,15 @@ public class LinkedList {
 	 *        the given memory block
 	 */
 	public void addLast(MemoryBlock block) {
-		Node newNode = new Node(block);
-		this.last.next = newNode;
-		this.last = newNode;
-		this.size++;
+		if (this.size == 0) {
+			addFirst(block);
+		}
+		else {
+			Node newNode = new Node(block);
+			this.last.next = newNode;
+			this.last = newNode;
+			this.size++;
+		}
 	}
 	
 	/**
