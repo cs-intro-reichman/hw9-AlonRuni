@@ -263,9 +263,9 @@ public class LinkedList {
 		Node cur = this.first;
 		String str = "";
 		while (cur != null) {
-			str += cur.block + ", ";
+			str += cur.block + " ";
 			cur = cur.next;
 		}
-		return str.substring(0, str.length() - 2);
+		return str.substring(0, str.length() - 1);
 	}
 }
