@@ -1,3 +1,5 @@
+
+
 /**
  * Represents a managed memory space. The memory space manages a list of allocated 
  * memory blocks, and a list free memory blocks. The methods "malloc" and "free" are 
@@ -107,6 +109,8 @@ public class MemorySpace {
 		catch (IllegalArgumentException e) {
 			return;
 		}
+
+	
 	}
 	
 	/**
@@ -126,13 +130,28 @@ public class MemorySpace {
 		/// TODO: Implement defrag test
 		Node cur = freeList.getFirst();
 		while (cur != null) {
-			for (int i = freeList.indexOf(cur.block); i < freeList.getSize() - 1; i++) {
-				if (cur.block.baseAddress + cur.block.length == freeList.getBlock(i + 1).baseAddress) {
-					freeList.add(freeList.indexOf(cur.block) + 1, new MemoryBlock(cur.block.baseAddress, cur.block.length + freeList.getBlock(i + 1).length));
+			for (int i = freeList.indexOf(cur.block) + 1; i < freeList.getSize(); i++) {
+				if (cur.block.baseAddress + cur.block.length == freeList.getBlock(i).baseAddress) {
+					freeList.add(freeList.indexOf(cur.block) + 1, new MemoryBlock(cur.block.baseAddress, cur.block.length + freeList.getBlock(i).length));
+					freeList.remove(i + 1);
 					freeList.remove(cur.block);
+					defrag();
 				}
 			}
 			cur = cur.next;
 		}
+	}
+	public static void main(String[] args) {
+		MemorySpace memorySpace = new MemorySpace(100);
+		memorySpace.malloc(2);
+		memorySpace.malloc(2);
+		memorySpace.malloc(2);
+		memorySpace.malloc(2);
+		memorySpace.malloc(2);
+		memorySpace.free(0);
+		memorySpace.free(2);
+		memorySpace.free(4);
+		memorySpace.defrag();
+		System.out.println(memorySpace);
 	}
 }
