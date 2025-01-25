@@ -93,6 +93,7 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
+		if (address == 0 && freeList.getSize() == 1) throw new IllegalArgumentException ("index must be between 0 and size");
 		try {
 			int i = 0;
 			while (address != allocatedList.getBlock(i).baseAddress && i < allocatedList.getSize()) {
@@ -107,8 +108,7 @@ public class MemorySpace {
 			}
 		}
 		catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(
-					"index must be between 0 and size");
+			return;
 		}
 
 	
@@ -130,16 +130,33 @@ public class MemorySpace {
 	public void defrag() {
 		Node cur = freeList.getFirst();
 		while (cur != null) {
-			for (int i = freeList.indexOf(cur.block) + 1; i < freeList.getSize(); i++) {
+			for (int i = 0; i < freeList.getSize(); i++) {
 				if (cur.block.baseAddress + cur.block.length == freeList.getBlock(i).baseAddress) {
-					freeList.add(freeList.indexOf(cur.block) + 1, new MemoryBlock(cur.block.baseAddress, cur.block.length + freeList.getBlock(i).length));
-					freeList.remove(i + 1);
-					freeList.remove(cur.block);
-					defrag();
+					if (freeList.indexOf(cur.block) < i) {
+						freeList.add(freeList.indexOf(cur.block) + 1, new MemoryBlock(cur.block.baseAddress, cur.block.length + freeList.getBlock(i).length));
+						freeList.remove(i + 1);
+						freeList.remove(cur.block);
+						defrag();
+					}
+					else {
+						freeList.add(freeList.indexOf(cur.block) + 1, new MemoryBlock(cur.block.baseAddress, cur.block.length + freeList.getBlock(i).length));
+						freeList.remove(i);
+						freeList.remove(cur.block);
+						defrag();
+					}
 				}
 			}
 			cur = cur.next;
 		}
 	}
+	public static void main(String[] args) {
+		MemorySpace memorySpace = new MemorySpace(100);
+		memorySpace.malloc(90);
+		memorySpace.free(0);
+		System.out.println(memorySpace);
+		memorySpace.defrag();
+		System.out.println(memorySpace);
 
+
+	}
 }
