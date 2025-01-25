@@ -141,17 +141,4 @@ public class MemorySpace {
 			cur = cur.next;
 		}
 	}
-	public static void main(String[] args) {
-		MemorySpace memorySpace = new MemorySpace(100);
-		memorySpace.malloc(2);
-		memorySpace.malloc(2);
-		memorySpace.malloc(2);
-		memorySpace.malloc(2);
-		memorySpace.malloc(2);
-		memorySpace.free(0);
-		memorySpace.free(2);
-		memorySpace.free(4);
-		memorySpace.defrag();
-		System.out.println(memorySpace);
-	}
 }
