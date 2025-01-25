@@ -107,7 +107,8 @@ public class MemorySpace {
 			}
 		}
 		catch (IllegalArgumentException e) {
-			return;
+			throw new IllegalArgumentException(
+					"index must be between 0 and size");
 		}
 
 	
@@ -127,7 +128,6 @@ public class MemorySpace {
 	 * In this implementation Malloc does not call defrag.
 	 */
 	public void defrag() {
-		/// TODO: Implement defrag test
 		Node cur = freeList.getFirst();
 		while (cur != null) {
 			for (int i = freeList.indexOf(cur.block) + 1; i < freeList.getSize(); i++) {
@@ -141,4 +141,5 @@ public class MemorySpace {
 			cur = cur.next;
 		}
 	}
+
 }
