@@ -93,7 +93,6 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		if (address == 0 && freeList.getSize() == 1) throw new IllegalArgumentException ("index must be between 0 and size");
 		try {
 			int i = 0;
 			while (address != allocatedList.getBlock(i).baseAddress && i < allocatedList.getSize()) {
@@ -148,15 +147,5 @@ public class MemorySpace {
 			}
 			cur = cur.next;
 		}
-	}
-	public static void main(String[] args) {
-		MemorySpace memorySpace = new MemorySpace(100);
-		memorySpace.malloc(90);
-		memorySpace.free(0);
-		System.out.println(memorySpace);
-		memorySpace.defrag();
-		System.out.println(memorySpace);
-
-
 	}
 }
