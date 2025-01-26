@@ -1,5 +1,7 @@
 
 
+
+
 /**
  * Represents a managed memory space. The memory space manages a list of allocated 
  * memory blocks, and a list free memory blocks. The methods "malloc" and "free" are 
@@ -93,6 +95,10 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
+		if (allocatedList.getSize() == 0) {
+			throw new IllegalArgumentException (
+					"index must be between 0 and size");
+		}
 		try {
 			int i = 0;
 			while (address != allocatedList.getBlock(i).baseAddress && i < allocatedList.getSize()) {
@@ -147,5 +153,10 @@ public class MemorySpace {
 			}
 			cur = cur.next;
 		}
+	}
+
+	public static void main(String[] args) {
+		MemorySpace memorySpace = new MemorySpace(100);
+		memorySpace.free(0);
 	}
 }
